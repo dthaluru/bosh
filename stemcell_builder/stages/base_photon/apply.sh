@@ -44,7 +44,7 @@ fi
 
 run_in_chroot $chroot "yum -c /custom_photon_yum.conf update --assumeyes"
 run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install photon-release"
-run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install e2fsprogs shadow cracklib Linux-PAM findutils diffutils sed grep tar which gzip openssh wget nano tdnf yum curl grub tzdata"
+run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install coreutils bindutils sudo e2fsprogs shadow cracklib Linux-PAM findutils diffutils sed grep tar which gzip openssh wget nano tdnf yum curl grub tzdata"
 run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install linux"
 run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install systemd"
 
