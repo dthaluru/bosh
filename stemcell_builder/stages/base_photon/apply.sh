@@ -11,7 +11,7 @@ rpm --root $chroot --initdb
 
 case "${stemcell_operating_system_version}" in
   "1")
-    release_package_url="/mnt/photon/usr/src/photon/RPMS/noarch/photon-release-1.0-1.noarch.rpm"
+    release_package_url="/mnt/photon/RPMS/noarch/photon-release-1.0-1.noarch.rpm"
     ;;
   *)
     echo "Unknown Photon version: ${stemcell_operating_system_version}"
