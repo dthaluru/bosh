@@ -246,6 +246,7 @@ module Bosh::Stemcell
     def photon_os_stages
       [
         :base_photon,
+        :bosh_users,
       ].flatten
     end
 
