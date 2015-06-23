@@ -65,6 +65,9 @@ then
     chmod 0755 /etc/init.d/rsyslog
     chkconfig --add rsyslog
   "
+elif [ -f $chroot/etc/photon-release ] # Photon
+then
+  echo "do nothing"
 else
   echo "Unknown OS, exiting"
   exit 2

@@ -246,7 +246,12 @@ module Bosh::Stemcell
     def photon_os_stages
       [
         :base_photon,
-        :bosh_users,
+	:base_photon_runit,
+        bosh_steps,
+        :base_ssh,
+        :rsyslog_config,
+	:system_grub,
+	:cron_config,
       ].flatten
     end
 

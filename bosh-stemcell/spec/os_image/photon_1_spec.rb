@@ -14,40 +14,7 @@ describe 'Photon 1 OS image', os_image: true do
       it { should be_file }
       it { should contain 'en_US.UTF-8' }
     end
-
-    %w(
-      yum
-      photon-release
-    ).each do |pkg|
-      describe package(pkg) do
-        it { should be_installed }
-      end
-    end
-  end
-
-  context 'installed by base_photon_packages' do
-    %w(
-      curl
-      e2fsprogs
-      glibc
-      openssh
-      openssl
-      rpm
-      sudo
-      systemd
-      unzip
-      wget
-      linux
-    ).each do |pkg|
-      describe package(pkg) do
-        it { should be_installed }
-      end
-    end
-  end
-
-  context 'installed by system_grub' do
-    describe package('grub') do
-      it { should be_installed }
-    end
   end
 end
+
+  

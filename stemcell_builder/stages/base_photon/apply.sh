@@ -11,7 +11,7 @@ rpm --root $chroot --initdb
 
 case "${stemcell_operating_system_version}" in
   "1")
-    release_package_url="/mnt/photon/RPMS/noarch/photon-release-1.0-1.noarch.rpm"
+    release_package_url="/mnt/photon/RPMS/noarch/photon-release-1.1-1.noarch.rpm"
     ;;
   *)
     echo "Unknown Photon version: ${stemcell_operating_system_version}"
@@ -36,7 +36,8 @@ if [ ! -d $chroot/mnt/photon ]; then
   add_on_exit "umount $chroot/mnt/photon"
 fi
 
-rpm --root $chroot --force --nodeps --install ${release_package_url}
+cp /etc/resolv.conf $chroot/etc/resolv.conf
+dd if=/dev/urandom of=$chroot/var/lib/random-seed bs=512 count=1
 
 if [ ! -f $chroot/custom_rhel_yum.conf ]; then
   cp /bosh/stemcell_builder/etc/custom_photon_yum.conf $chroot/
@@ -44,9 +45,9 @@ fi
 
 run_in_chroot $chroot "yum -c /custom_photon_yum.conf update --assumeyes"
 run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install photon-release"
-run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install coreutils bindutils sudo e2fsprogs shadow cracklib Linux-PAM findutils diffutils sed grep tar which gzip openssh wget nano tdnf yum curl grub tzdata"
+run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install linux-api-headers glibc glibc-devel zlib zlib-devel file binutils binutils-devel gmp gmp-devel mpfr mpfr-devel mpc coreutils flex bison bindutils sudo e2fsprogs shadow cracklib Linux-PAM findutils diffutils sed grep tar gawk which make patch gzip openssl openssh wget nano tdnf yum curl grub tzdata"
 run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install linux"
-run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install systemd rsyslog cronie"
+run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install systemd rsyslog cronie gcc kpartx NetworkManager"
 
 run_in_chroot $chroot "yum -c /custom_photon_yum.conf clean all"
 
@@ -59,4 +60,9 @@ cp ${chroot}/usr/share/zoneinfo/UTC ${chroot}/etc/localtime
 
 # Setting locale
 echo "LANG=\"en_US.UTF-8\"" >> ${chroot}/etc/locale.conf
+
+cat >> ${chroot}/etc/login.defs <<-EOF
+USERGROUPS_ENAB yes
+EOF
+
 
