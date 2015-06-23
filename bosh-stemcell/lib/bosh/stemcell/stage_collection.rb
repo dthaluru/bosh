@@ -250,6 +250,7 @@ module Bosh::Stemcell
         bosh_steps,
         :base_ssh,
         :rsyslog_config,
+	:delay_monit_start,
 	:system_grub,
 	:cron_config,
       ].flatten

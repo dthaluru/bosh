@@ -14,6 +14,8 @@ curl -L http://smarden.org/runit/${runit_version}.tar.gz > /tmp/${runit_version}
 tar -C /tmp -xvf /tmp/${runit_version}.tar.gz
 cd /tmp/admin/${runit_version}
 sh package/install
+cp etc/2 /sbin/runsvdir-start
+chmod 750 /sbin/runsvdir-start
 "
 
 cp $(dirname $0)/assets/runit.service ${chroot}/usr/lib/systemd/system/
