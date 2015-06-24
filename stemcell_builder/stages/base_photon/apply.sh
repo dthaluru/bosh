@@ -45,7 +45,7 @@ fi
 
 run_in_chroot $chroot "yum -c /custom_photon_yum.conf update --assumeyes"
 run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install photon-release"
-run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install linux-api-headers glibc glibc-devel zlib zlib-devel file binutils binutils-devel gmp gmp-devel mpfr mpfr-devel mpc coreutils flex bison bindutils sudo e2fsprogs shadow cracklib Linux-PAM findutils diffutils sed grep tar gawk which make patch gzip openssl openssh wget nano tdnf yum curl grub tzdata"
+run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install linux-api-headers glibc glibc-devel zlib zlib-devel file binutils binutils-devel gmp gmp-devel mpfr mpfr-devel mpc coreutils flex bison bindutils sudo e2fsprogs shadow cracklib Linux-PAM findutils diffutils sed grep tar gawk which make patch gzip openssl openssh wget nano tdnf yum curl grub tzdata readline-devel ncurses-devel"
 run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install linux"
 run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install systemd rsyslog cronie gcc kpartx NetworkManager"
 
