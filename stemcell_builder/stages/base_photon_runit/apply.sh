@@ -16,6 +16,7 @@ cd /tmp/admin/${runit_version}
 sh package/install
 cp etc/2 /sbin/runsvdir-start
 chmod 750 /sbin/runsvdir-start
+mkdir -m 755 /etc/service
 "
 
 cp $(dirname $0)/assets/runit.service ${chroot}/usr/lib/systemd/system/
