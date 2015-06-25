@@ -65,4 +65,9 @@ cat >> ${chroot}/etc/login.defs <<-EOF
 USERGROUPS_ENAB yes
 EOF
 
+mkdir -p $chroot/boot
+mkdir -p /tmp/tmp_initrd
+cd /tmp/tmp_initrd && gunzip < /mnt/photon/isolinux/initrd.img | cpio -i || true
+cp /tmp/tmp_initrd/boot/initrd.img-no-kmods $chroot/boot/
+ 
 
