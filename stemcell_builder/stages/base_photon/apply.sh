@@ -43,9 +43,10 @@ if [ ! -f $chroot/custom_rhel_yum.conf ]; then
   cp /bosh/stemcell_builder/etc/custom_photon_yum.conf $chroot/
 fi
 
+
 run_in_chroot $chroot "yum -c /custom_photon_yum.conf update --assumeyes"
 run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install photon-release"
-run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install linux-api-headers glibc glibc-devel zlib zlib-devel file binutils binutils-devel gmp gmp-devel mpfr mpfr-devel mpc coreutils flex bison bindutils sudo e2fsprogs shadow cracklib Linux-PAM findutils diffutils sed grep tar gawk which make patch gzip openssl openssh wget nano tdnf yum curl grub tzdata readline-devel ncurses-devel"
+run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install linux-api-headers glibc glibc-devel zlib zlib-devel file binutils binutils-devel gmp gmp-devel mpfr mpfr-devel mpc coreutils flex bison bindutils sudo e2fsprogs shadow cracklib Linux-PAM findutils diffutils sed grep tar gawk which make patch gzip openssl openssh wget nano tdnf yum curl grub tzdata readline-devel ncurses-devel cmake bzip2-devel cdrkit ruby logrotate"
 run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install linux"
 run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install systemd rsyslog cronie gcc kpartx NetworkManager"
 
@@ -68,6 +69,6 @@ EOF
 mkdir -p $chroot/boot
 mkdir -p /tmp/tmp_initrd
 cd /tmp/tmp_initrd && gunzip < /mnt/photon/isolinux/initrd.img | cpio -i || true
-cp /tmp/tmp_initrd/boot/initrd.img-no-kmods $chroot/boot/
+cp /tmp/tmp_initrd/boot/initrd.img-no-kmods $chroot/boot/initrd.img-no-kmods
  
 

@@ -83,6 +83,39 @@ EOF
 
   rm ${image_mount_point}/device.map
 
+elif [ -x ${image_mount_point}/usr/sbin/grub-install ] # GRUB 2
+then
+
+  # GRUB 2 needs to operate on the loopback block device for the whole FS image, so we map it into the chroot environment
+  touch ${image_mount_point}${device}
+  mount --bind ${device} ${image_mount_point}${device}
+  add_on_exit "umount ${image_mount_point}${device}"
+
+  mkdir -p `dirname ${image_mount_point}${loopback_dev}`
+  touch ${image_mount_point}${loopback_dev}
+  mount --bind ${loopback_dev} ${image_mount_point}${loopback_dev}
+  add_on_exit "umount ${image_mount_point}${loopback_dev}"
+
+  # GRUB 2 needs /sys and /proc to do its job
+  mount -t proc none ${image_mount_point}/proc
+  add_on_exit "umount ${image_mount_point}/proc"
+  
+  mount -t sysfs none ${image_mount_point}/sys
+  add_on_exit "umount ${image_mount_point}/sys"
+  
+  echo "(hd0) ${device}" > ${image_mount_point}/device.map
+
+  # install bootsector into disk image file
+  run_in_chroot ${image_mount_point} "grub-install -v --no-floppy --grub-mkdevicemap=/device.map ${device}"
+
+  cat >${image_mount_point}/etc/default/grub <<EOF
+GRUB_CMDLINE_LINUX="vconsole.keymap=us net.ifnames=0 crashkernel=auto selinux=0 plymouth.enable=0"
+EOF
+
+  # assemble config file that is read by grub2 at boot time
+  run_in_chroot ${image_mount_point} "grub-mkconfig -o /boot/grub/grub.cfg"
+
+  rm ${image_mount_point}/device.map
 else # Classic GRUB
 
   mkdir -p ${image_mount_point}/tmp/grub
@@ -124,6 +157,14 @@ then
 # /etc/fstab Created by BOSH Stemcell Builder
 UUID=${uuid} / ext4 defaults 1 1
 FSTAB
+elif [ -f ${image_mount_point}/etc/photon-release ] # Photon
+then
+  initrd_file="initrd.img-no-kmods"
+  os_name=$(cat ${image_mount_point}/etc/photon-release)
+  cat > ${image_mount_point}/etc/fstab <<FSTAB
+# /etc/fstab Created by BOSH Stemcell Builder
+UUID=${uuid} / ext4 defaults 1 1
+FSTAB
 else
   echo "Unknown OS, exiting"
   exit 2
@@ -141,6 +182,17 @@ title ${os_name} (${kernel_version})
 GRUB_CONF
 
 elif [ -f ${image_mount_point}/etc/redhat-release ] # Centos or RHEL
+then
+  cat > ${image_mount_point}/boot/grub/grub.conf <<GRUB_CONF
+default=0
+timeout=1
+title ${os_name} (${kernel_version})
+  root (hd0,0)
+  kernel /boot/vmlinuz-${kernel_version} ro root=UUID=${uuid} net.ifnames=0 plymouth.enable=0 selinux=0 console=tty0 console=ttyS0,115200n8
+  initrd /boot/${initrd_file}
+GRUB_CONF
+
+elif [ -f ${image_mount_point}/etc/photon-release ] # Photon
 then
   cat > ${image_mount_point}/boot/grub/grub.conf <<GRUB_CONF
 default=0
