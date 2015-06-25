@@ -9,6 +9,8 @@ source $base_dir/lib/prelude_bosh.bash
 os_type=$(get_os_type)
 if [ "${os_type}" == "ubuntu" ]; then
   pkg_mgr install open-vm-tools
+elif [ "${os_type}" == "photon" ]; then
+  run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install open-vm-tools"
 else
   echo "No installation strategy for open-vm-tools, exiting..."
   exit 2
