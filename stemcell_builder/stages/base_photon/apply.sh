@@ -48,7 +48,7 @@ run_in_chroot $chroot "yum -c /custom_photon_yum.conf update --assumeyes"
 run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install photon-release"
 run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install linux-api-headers glibc glibc-devel zlib zlib-devel file binutils binutils-devel gmp gmp-devel mpfr mpfr-devel mpc coreutils flex bison bindutils sudo e2fsprogs shadow cracklib Linux-PAM findutils diffutils sed grep tar gawk which make patch gzip openssl openssh wget nano tdnf yum curl grub tzdata readline-devel ncurses-devel cmake bzip2-devel cdrkit ruby logrotate"
 run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install linux"
-run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install systemd rsyslog cronie gcc kpartx NetworkManager"
+run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes install systemd rsyslog cronie gcc kpartx NetworkManager pkg-config ncurses bash bzip2 cracklib-dicts shadow procps-ng iana-etc readline coreutils bc libtool inetutils findutils xz iproute2 util-linux ca-certificates iptables attr libcap expat dbus sqlite-autoconf nspr nss rpm libffi gdbm python2 python2-libs pcre glib libxml2 photon-release cpio gzip nano db libsolv libgpg-error hawkey libassuan gpgme librepo tdnf libdnet xerces-c xml-security-c libmspack cloud-init krb5 e2fsprogs-devel kmod"
 
 run_in_chroot $chroot "yum -c /custom_photon_yum.conf clean all"
 

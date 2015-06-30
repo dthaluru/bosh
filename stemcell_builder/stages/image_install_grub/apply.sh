@@ -106,15 +106,16 @@ then
   echo "(hd0) ${device}" > ${image_mount_point}/device.map
 
   # install bootsector into disk image file
-  run_in_chroot ${image_mount_point} "grub-install -v --no-floppy --grub-mkdevicemap=/device.map ${device}"
-
+  run_in_chroot ${image_mount_point} "grub-install --no-floppy --grub-mkdevicemap=/device.map ${device}"
+  device_name=`echo ${device} | sed -e "s@/dev/@/@g"`
+  device_name="/dev/mapper${device_name}p1"
   cat >${image_mount_point}/etc/default/grub <<EOF
 GRUB_CMDLINE_LINUX="vconsole.keymap=us net.ifnames=0 crashkernel=auto selinux=0 plymouth.enable=0"
 EOF
 
   # assemble config file that is read by grub2 at boot time
   run_in_chroot ${image_mount_point} "grub-mkconfig -o /boot/grub/grub.cfg"
-
+  sed -i "s@${device_name}@/dev/sda1@" ${image_mount_point}/boot/grub/grub.cfg
   rm ${image_mount_point}/device.map
 else # Classic GRUB
 
