@@ -115,7 +115,7 @@ EOF
 
   # assemble config file that is read by grub2 at boot time
   run_in_chroot ${image_mount_point} "grub-mkconfig -o /boot/grub/grub.cfg"
-  sed -i "s@${device_name}@/dev/sda1@" ${image_mount_point}/boot/grub/grub.cfg
+#sed -i "s@${device_name}@/dev/sda1@" ${image_mount_point}/boot/grub/grub.cfg
   rm ${image_mount_point}/device.map
 else # Classic GRUB
 
@@ -160,7 +160,7 @@ UUID=${uuid} / ext4 defaults 1 1
 FSTAB
 elif [ -f ${image_mount_point}/etc/photon-release ] # Photon
 then
-  initrd_file="initrd.img-no-kmods"
+  initrd_file="initrd.img-${kernel_version}"
   os_name=$(cat ${image_mount_point}/etc/photon-release)
   cat > ${image_mount_point}/etc/fstab <<FSTAB
 # /etc/fstab Created by BOSH Stemcell Builder

@@ -67,6 +67,7 @@ then
   "
 elif [ -f $chroot/etc/photon-release ] # Photon
 then
+  sed -i "s@/dev/xconsole@/dev/console@g" $chroot/etc/rsyslog.d/50-default.conf
   echo "do nothing"
 else
   echo "Unknown OS, exiting"
