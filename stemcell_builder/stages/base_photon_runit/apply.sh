@@ -27,5 +27,7 @@ echo "after rpm installation"
 
 fi
 cp $(dirname $0)/assets/runit.service ${chroot}/usr/lib/systemd/system/
+run_in_chroot ${chroot} "systemctl disable systemd-networkd"
 run_in_chroot ${chroot} "systemctl enable runit"
 run_in_chroot ${chroot} "systemctl enable NetworkManager"
+run_in_chroot ${chroot} "ln -sfv /etc/rc.d/init.d /etc/init.d"
