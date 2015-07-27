@@ -53,13 +53,14 @@ run_in_chroot $chroot "yum -c /custom_photon_yum.conf --verbose --assumeyes inst
 run_in_chroot $chroot "yum -c /custom_photon_yum.conf clean all"
 run_in_chroot $chroot "touch /etc/machine-id"
 
-#set username and password
 
 touch ${chroot}/etc/sysconfig/network # must be present for network to be configured
 
 # Setting timezone
 cp ${chroot}/usr/share/zoneinfo/UTC ${chroot}/etc/localtime
 
+#generating default locales
+run_in_chroot $chroot "/usr/sbin/locale-gen.sh"
 # Setting locale
 echo "LANG=\"en_US.UTF-8\"" >> ${chroot}/etc/locale.conf
 
@@ -72,10 +73,6 @@ mkdir -p /tmp/tmp_initrd
 cd /tmp/tmp_initrd && gunzip < /mnt/photon/isolinux/initrd.img | cpio -i || true
 cp /tmp/tmp_initrd/boot/initrd.img-no-kmods $chroot/boot/initrd.img-3.19.2
 
-cp $(dirname $0)/assets/locale-gen.sh ${chroot}/usr/sbin/
-cp $(dirname $0)/assets/locale-gen.conf ${chroot}/etc/
-
-run_in_chroot $chroot "/usr/sbin/locale-gen.sh"
 
 
 

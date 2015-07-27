@@ -82,41 +82,6 @@ EOF
   run_in_chroot ${image_mount_point} "grub2-mkconfig -o /boot/grub2/grub.cfg"
 
   rm ${image_mount_point}/device.map
-
-elif [ -x ${image_mount_point}/usr/sbin/grub-install ] # GRUB 2
-then
-
-  # GRUB 2 needs to operate on the loopback block device for the whole FS image, so we map it into the chroot environment
-  touch ${image_mount_point}${device}
-  mount --bind ${device} ${image_mount_point}${device}
-  add_on_exit "umount ${image_mount_point}${device}"
-
-  mkdir -p `dirname ${image_mount_point}${loopback_dev}`
-  touch ${image_mount_point}${loopback_dev}
-  mount --bind ${loopback_dev} ${image_mount_point}${loopback_dev}
-  add_on_exit "umount ${image_mount_point}${loopback_dev}"
-
-  # GRUB 2 needs /sys and /proc to do its job
-  mount -t proc none ${image_mount_point}/proc
-  add_on_exit "umount ${image_mount_point}/proc"
-  
-  mount -t sysfs none ${image_mount_point}/sys
-  add_on_exit "umount ${image_mount_point}/sys"
-  
-  echo "(hd0) ${device}" > ${image_mount_point}/device.map
-
-  # install bootsector into disk image file
-  run_in_chroot ${image_mount_point} "grub-install --no-floppy --grub-mkdevicemap=/device.map ${device}"
-  device_name=`echo ${device} | sed -e "s@/dev/@/@g"`
-  device_name="/dev/mapper${device_name}p1"
-  cat >${image_mount_point}/etc/default/grub <<EOF
-GRUB_CMDLINE_LINUX="vconsole.keymap=us net.ifnames=0 crashkernel=auto selinux=0 plymouth.enable=0"
-EOF
-
-  # assemble config file that is read by grub2 at boot time
-  run_in_chroot ${image_mount_point} "grub-mkconfig -o /boot/grub/grub.cfg"
-#sed -i "s@${device_name}@/dev/sda1@" ${image_mount_point}/boot/grub/grub.cfg
-  rm ${image_mount_point}/device.map
 else # Classic GRUB
 
   mkdir -p ${image_mount_point}/tmp/grub
