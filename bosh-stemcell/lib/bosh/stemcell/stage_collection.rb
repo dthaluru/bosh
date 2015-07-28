@@ -246,13 +246,13 @@ module Bosh::Stemcell
     def photon_os_stages
       [
         :base_photon,
-	:base_photon_runit,
+        :base_photon_runit,
         bosh_steps,
         :base_ssh,
         :rsyslog_config,
-	:delay_monit_start,
-	:system_grub,
-	:cron_config,
+        :delay_monit_start,
+        :system_grub,
+        :cron_config,
       ].flatten
     end
 
